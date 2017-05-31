@@ -11,6 +11,7 @@ public class MapCreate2 : MonoBehaviour
 
 
     private ImageMap map;
+    private bool loading;
 
     // Generated Fields
     private float horizontalScale;
@@ -22,25 +23,41 @@ public class MapCreate2 : MonoBehaviour
 
 
 
-
     // Editor Fields
     [Header("Function")]
     [SerializeField]
     private Transform playContainer;
-    [SerializeField] private float allScale = 10f;
+    [SerializeField] private float allScale = 40f;
     [SerializeField]
     private float setwidth = 1;
     [SerializeField]
     private GameObject carObject;
+    [SerializeField]
+    private GameObject idcanvas;
+
 
     [Header("Aesthetic")]
     [SerializeField]
     private Material lineMaterial;
 
-
-    private IEnumerator Start()
+    public void Load(string id)
     {
-        int id = 2;
+        if (loading) return;
+
+        try{
+            StartCoroutine(LoadLevel(int.Parse(id)));
+        }
+        catch (FormatException)
+        {
+            
+        }
+    }
+
+
+    private IEnumerator LoadLevel(int id)
+    {
+        //int id = 2;
+
         using (UnityWebRequest www = UnityWebRequest.Get("http://papermap.tk/api/map/" + id))
         {
             yield return www.Send();
@@ -72,7 +89,7 @@ public class MapCreate2 : MonoBehaviour
 
         //adjust = new Vector3(-horizontalScale * allScale / 2f, 0, verticalScale * allScale / 2f);
 
-        width = setwidth*.2f;
+        width = setwidth*1f;
 
 		trackLine = map.Lines.First(l => l.Color == MapColor.Black);
 
@@ -84,7 +101,10 @@ public class MapCreate2 : MonoBehaviour
 		MakeFloor();
         MakeTrack();
         Spawn();
-        CreatePortal(); 
+        CreatePortal();
+        playContainer.gameObject.SetActive(true);
+        idcanvas.SetActive(false);
+
 
 
  
@@ -118,7 +138,8 @@ public class MapCreate2 : MonoBehaviour
         spawnPoint = Vector3.zero;//(PointToWorldSpace(map.Lines[0].Points[1]) + PointToWorldSpace(map.Lines[0].Points[1]) / 4) + PointToWorldSpace(map.Lines[0].Points[0]);
         //SET PLAYER TO GO TO SPAWN POINT
         Vector3 startPos = PointToWorldSpace(trackLine.Points[0]);
-        GameObject car = Instantiate(carObject, startPos, Quaternion.Euler(90, 90, 90));
+        //GameObject car = Instantiate(carObject, startPos, Quaternion.Euler(90, 90, 90));
+        carObject.transform.position = startPos;
     }
 
 
@@ -133,7 +154,7 @@ public class MapCreate2 : MonoBehaviour
 
     private Vector3 PointToWorldSpace(Point p)
     {
-        return new Vector3(p.X * horizontalScale * allScale * 4f, 0f, -p.Y * verticalScale * allScale * 4f);// + adjust;
+        return new Vector3(p.X * horizontalScale * allScale, 0f, -p.Y * verticalScale * allScale);// + adjust;
     }
 
     private void MakeTrack()
@@ -152,9 +173,6 @@ public class MapCreate2 : MonoBehaviour
             Material mat = (Material)Resources.Load("asphalt");
             mr.material = mat;
 
-
-            //ScaleMap(track, 4);
-            //track.transform.position = new Vector3(0, 0, 0);
             track.transform.parent = playContainer;
             track.transform.position = track.transform.position + Vector3.up * 0.001f;
 
@@ -220,12 +238,12 @@ public class MapCreate2 : MonoBehaviour
                 Vector3 fv3 = point1 + norm * width;
                 Vector3 fv4 = point1 - norm * width;
 
-
+                /*
                 fv1 = fv1 + new Vector3(1f, 0, 1f);
                 fv2 = fv2 + new Vector3(1f, 0, 1f);
                 fv3 = fv3 + new Vector3(1f, 0, 1f);
                 fv4 = fv4 + new Vector3(1f, 0, 1f);
-
+                */
 
 				tempvert[i * 4 + 0] = fv3;
                 tempvert[i * 4 + 1] = fv4;
@@ -282,8 +300,8 @@ public class MapCreate2 : MonoBehaviour
                 vertices[p * 2 + 2] = temp2;
                
             }
-            */
             
+            */
             //create triangles
                 for (int j = 0; j < triangles.Length; j += 12)
                 {
