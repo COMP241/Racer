@@ -6,7 +6,7 @@ public class portalTrigger : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        //teleport to spawn point(other.gameObject);
+        gameController.Respawn();
     }
 
 }

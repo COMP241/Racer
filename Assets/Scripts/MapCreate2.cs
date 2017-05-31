@@ -13,12 +13,15 @@ public class MapCreate2 : MonoBehaviour
     private ImageMap map;
     private bool loading;
 
+
     // Generated Fields
     private float horizontalScale;
     private float verticalScale;
     private Vector3 adjust;
     private float width;
     private Line trackLine;
+
+
 
 
 
@@ -56,7 +59,6 @@ public class MapCreate2 : MonoBehaviour
 
     private IEnumerator LoadLevel(int id)
     {
-        //int id = 2;
 
         using (UnityWebRequest www = UnityWebRequest.Get("http://papermap.tk/api/map/" + id))
         {
@@ -87,11 +89,12 @@ public class MapCreate2 : MonoBehaviour
             verticalScale = 1f / map.Ratio;
         }
 
-        //adjust = new Vector3(-horizontalScale * allScale / 2f, 0, verticalScale * allScale / 2f);
 
         width = setwidth*1f;
 
 		trackLine = map.Lines.First(l => l.Color == MapColor.Black);
+
+        gameController.SetSpawnPoint(PointToWorldSpace(trackLine.Points[0]));
 
     }
 
@@ -105,15 +108,15 @@ public class MapCreate2 : MonoBehaviour
         playContainer.gameObject.SetActive(true);
         idcanvas.SetActive(false);
 
-
-
- 
     }
+
 
     private void ScaleMap(GameObject go, float f){
 
         go.transform.localScale += new Vector3(f, 0, f);
     }
+
+
 
     private void MakeFloor()
     {
@@ -131,15 +134,13 @@ public class MapCreate2 : MonoBehaviour
         
     }
 
-
     private void Spawn()
     {
-        Vector3 spawnPoint;
-        spawnPoint = Vector3.zero;//(PointToWorldSpace(map.Lines[0].Points[1]) + PointToWorldSpace(map.Lines[0].Points[1]) / 4) + PointToWorldSpace(map.Lines[0].Points[0]);
-        //SET PLAYER TO GO TO SPAWN POINT
+       
         Vector3 startPos = PointToWorldSpace(trackLine.Points[0]);
         //GameObject car = Instantiate(carObject, startPos, Quaternion.Euler(90, 90, 90));
-        carObject.transform.position = startPos;
+        //carObject.transform.position = startPos;
+        gameController.Respawn();
     }
 
 
@@ -159,12 +160,6 @@ public class MapCreate2 : MonoBehaviour
 
     private void MakeTrack()
     {
-
-        //Change so only takes black lines
-
-
-
-            
             GameObject track = new GameObject("Track");
             Mesh mesh = new Mesh();
             MeshFilter mf = track.AddComponent<MeshFilter>();
@@ -179,13 +174,6 @@ public class MapCreate2 : MonoBehaviour
 			Vector3[] tempvert = new Vector3[(trackLine.Points.Length * 4) - 4];
 			Vector3[] vertices = new Vector3[trackLine.Points.Length * 2];
 			int[] triangles = new int[(vertices.Length - 2) * 6];
-
-            /*
-			tempvert = new Vector3[(line.Points.Length * 4) - 4];
-            vertices = new Vector3[line.Points.Length * 2];
-            triangles = new int[(vertices.Length - 2) * 6];
-            */
-
 
             Point[] point = trackLine.Points;
 
@@ -238,12 +226,6 @@ public class MapCreate2 : MonoBehaviour
                 Vector3 fv3 = point1 + norm * width;
                 Vector3 fv4 = point1 - norm * width;
 
-                /*
-                fv1 = fv1 + new Vector3(1f, 0, 1f);
-                fv2 = fv2 + new Vector3(1f, 0, 1f);
-                fv3 = fv3 + new Vector3(1f, 0, 1f);
-                fv4 = fv4 + new Vector3(1f, 0, 1f);
-                */
 
 				tempvert[i * 4 + 0] = fv3;
                 tempvert[i * 4 + 1] = fv4;
@@ -277,12 +259,12 @@ public class MapCreate2 : MonoBehaviour
                 
 			}
 
-            //straight copy over last points
+
             vertices[vertices.Length - 2] = tempvert[tempvert.Length - 2];
             vertices[vertices.Length - 1] = tempvert[tempvert.Length - 1];
 
 
-            //Loop to create contant width on corners
+            //Loop to create conatant width on corners
             /*
             for (int p = 0; p < point.Length - 2; p++)
             {
@@ -326,11 +308,8 @@ public class MapCreate2 : MonoBehaviour
                 }
 
 
-
             mesh.vertices = vertices;
             mesh.triangles = triangles;
-
-
 
 
 

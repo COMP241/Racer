@@ -325,7 +325,7 @@ RectTransform:
   m_GameObject: {fileID: 723060178}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2.568554, y: 2.5685542, z: 2.5685542}
   m_Children:
   - {fileID: 1480073670}
   - {fileID: 1881897057}
@@ -675,6 +675,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1588746307}
   - component: {fileID: 1588746306}
+  - component: {fileID: 1588746308}
   m_Layer: 0
   m_Name: GameControl
   m_TagString: Untagged
@@ -712,6 +713,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1588746308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1588746305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0983b8ad7bfa7450fabd072e1342d85e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 535946412}
 --- !u!1 &1774819448
 GameObject:
   m_ObjectHideFlags: 0
