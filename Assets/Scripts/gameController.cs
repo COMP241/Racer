@@ -10,6 +10,7 @@ public class gameController : MonoBehaviour {
     [SerializeField]
     private GameObject player;
     private static Vector3 spawnPoint;
+    private static Quaternion rotation;
 
 	// Use this for initialization
 	void Start () {
@@ -28,8 +29,13 @@ public class gameController : MonoBehaviour {
         spawnPoint = p;
     }
 
+    public static void SetRotation(Quaternion q){
+        rotation = q;
+    }
+
     public static void Respawn(){
         instance.player.transform.position = spawnPoint;
+        instance.player.transform.rotation = rotation;
     }
 
 

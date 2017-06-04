@@ -100,6 +100,7 @@ public class MapCreate2 : MonoBehaviour
 
 
 
+
     }
 
     private void SetAugLines(){
@@ -110,10 +111,13 @@ public class MapCreate2 : MonoBehaviour
             worldPoint[z] = PointToWorldSpace(trackLine.Points[z]);
         }
 
-        for (int i = 0; i < trackLine.Points.Length - 2; i++)
+        for (int i = 0; i < trackLine.Points.Length - 1; i++)
         {
             aLines[i] = new AugLine(worldPoint[i], worldPoint[i + 1]);
         }
+
+        //TODO: could move, needs to be after SET CONSTANTS and BEFORE makeTRACK
+		gameController.SetRotation(Quaternion.FromToRotation(aLines[0].normPerp, Vector3.up));
     }
 
     private void GenerateLevel()
@@ -164,14 +168,14 @@ public class MapCreate2 : MonoBehaviour
     private void CreatePortal(){
         GameObject portal = (GameObject)Resources.Load("Models/Portal");
         Vector3 position = PointToWorldSpace(trackLine.Points[trackLine.Points.Length-1]);//vertices[vertices.Length - 1] + vertices[vertices.Length - 2]/2;
-        portal = Instantiate(portal, position, Quaternion.Euler(90, 90, 90)); //NEED TO GET D VEC FROM 2 VERT//+= new Vector3(4f, 0, 4f), Quaternion.Euler(90, 90, 90));
+        portal = Instantiate(portal, position, Quaternion.FromToRotation(Vector3.up, aLines[aLines.Length-1].normPerp)); //NEED TO GET D VEC FROM 2 VERT//+= new Vector3(4f, 0, 4f), Quaternion.Euler(90, 90, 90));
         portal.transform.parent = playContainer;
 
 
     }
 
     private void CreateCheckPoints(){
-        for (int i = 2; i < aLines.Length - 2; i++)
+        for (int i = 2; i < aLines.Length - 2; i+=aLines.Length/6)
         {
             GameObject cp = (GameObject)Resources.Load(("Models/CheckPoint"));
             Vector3 position = PointToWorldSpace(trackLine.Points[i]);
