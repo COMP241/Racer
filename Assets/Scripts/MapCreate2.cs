@@ -12,13 +12,14 @@ public class MapCreate2 : MonoBehaviour
 
     private ImageMap map;
     private bool loading;
+    AugLine[] aLines; 
 
 
     // Generated Fields
     private float horizontalScale;
     private float verticalScale;
     private Vector3 adjust;
-    private float width;
+    private static float width;
     private Line trackLine;
 
 
@@ -59,7 +60,7 @@ public class MapCreate2 : MonoBehaviour
 
     private IEnumerator LoadLevel(int id)
     {
-
+        loading = true;
         using (UnityWebRequest www = UnityWebRequest.Get("http://papermap.tk/api/map/" + id))
         {
             yield return www.Send();
@@ -74,6 +75,7 @@ public class MapCreate2 : MonoBehaviour
                 Debug.Log(www.error);
             }
         }
+        loading = false;
     }
 
     private void SetConstants()
@@ -96,15 +98,33 @@ public class MapCreate2 : MonoBehaviour
 
         gameController.SetSpawnPoint(PointToWorldSpace(trackLine.Points[0]));
 
+
+
+    }
+
+    private void SetAugLines(){
+		//Set up augLines
+		aLines = new AugLine[trackLine.Points.Length - 1];
+        Vector3[] worldPoint = new Vector3[trackLine.Points.Length];
+        for (int z = 0; z < trackLine.Points.Length - 1; z++){
+            worldPoint[z] = PointToWorldSpace(trackLine.Points[z]);
+        }
+
+        for (int i = 0; i < trackLine.Points.Length - 2; i++)
+        {
+            aLines[i] = new AugLine(worldPoint[i], worldPoint[i + 1]);
+        }
     }
 
     private void GenerateLevel()
     {
         SetConstants();
+        SetAugLines();
 		MakeFloor();
         MakeTrack();
         Spawn();
         CreatePortal();
+        CreateCheckPoints();
         playContainer.gameObject.SetActive(true);
         idcanvas.SetActive(false);
 
@@ -131,15 +151,12 @@ public class MapCreate2 : MonoBehaviour
 		ScaleMap(floor, 10);
         floor.transform.parent = playContainer;
 
-        
     }
 
     private void Spawn()
     {
        
         Vector3 startPos = PointToWorldSpace(trackLine.Points[0]);
-        //GameObject car = Instantiate(carObject, startPos, Quaternion.Euler(90, 90, 90));
-        //carObject.transform.position = startPos;
         gameController.Respawn();
     }
 
@@ -153,53 +170,41 @@ public class MapCreate2 : MonoBehaviour
 
     }
 
+    private void CreateCheckPoints(){
+        for (int i = 2; i < aLines.Length - 2; i++)
+        {
+            GameObject cp = (GameObject)Resources.Load(("Models/CheckPoint"));
+            Vector3 position = PointToWorldSpace(trackLine.Points[i]);
+            cp = Instantiate(cp, position, Quaternion.FromToRotation(Vector3.up, aLines[2].normPerp));
+            cp.transform.parent = playContainer;
+        }
+    }
+
     private Vector3 PointToWorldSpace(Point p)
     {
         return new Vector3(p.X * horizontalScale * allScale, 0f, -p.Y * verticalScale * allScale);// + adjust;
     }
 
     private void MakeTrack()
-    {
-            GameObject track = new GameObject("Track");
-            Mesh mesh = new Mesh();
-            MeshFilter mf = track.AddComponent<MeshFilter>();
-            mf.sharedMesh = mesh;
-            MeshRenderer mr = track.AddComponent<MeshRenderer>();
-            Material mat = (Material)Resources.Load("asphalt");
-            mr.material = mat;
+	{
+		GameObject track = new GameObject("Track");
+		Mesh mesh = new Mesh();
+		MeshFilter mf = track.AddComponent<MeshFilter>();
+		mf.sharedMesh = mesh;
+		MeshRenderer mr = track.AddComponent<MeshRenderer>();
+		Material mat = (Material)Resources.Load("asphalt");
+		mr.material = mat;
 
-            track.transform.parent = playContainer;
-            track.transform.position = track.transform.position + Vector3.up * 0.001f;
+		track.transform.parent = playContainer;
+		track.transform.position = track.transform.position + Vector3.up * 0.001f;
 
-			Vector3[] tempvert = new Vector3[(trackLine.Points.Length * 4) - 4];
-			Vector3[] vertices = new Vector3[trackLine.Points.Length * 2];
-			int[] triangles = new int[(vertices.Length - 2) * 6];
+		Vector3[] tempvert = new Vector3[(trackLine.Points.Length * 4) - 4];
+		Vector3[] vertices = new Vector3[trackLine.Points.Length * 2];
+		int[] triangles = new int[(vertices.Length - 2) * 6];
 
-            Point[] point = trackLine.Points;
+		Point[] point = trackLine.Points;
 
-            
-
-            //CAN TAKE A POINT, TURN IT TO A VECTOR, FIGURE OUT DX DY, THEN NORMALISE IT
-
-            /*
-            //SET UP FIRST TWO VERTICES FROM FIRST POINT
-            Point v1 = point[0];
-            Point v2 = point[1];
-            Vector3 vp1 = PointToWorldSpace(v1);
-            Vector3 vp2 = PointToWorldSpace(v2);
-            float derx = v2.X - v1.X;
-            float dery = v2.Y - v1.Y;
-            Point der = new Point(-dery, derx);
-            Vector3 dr = PointToWorldSpace(der);
-            dr = dr.normalized;
-
-            vertices[0] = vp1 + dr * .5f;
-            vertices[1] = vp1 - dr * .5f;
-            */
-            //create remaining vertices
-
-
-            for (int i = 0; i < point.Length - 1; i++)
+		for (int i = 0; i < point.Length - 1; i++)
             {
                 Point p1 = point[i];
                 Point p2 = point[i + 1];
@@ -235,6 +240,15 @@ public class MapCreate2 : MonoBehaviour
 
 
             }
+
+        /*
+        for (int i = 0; i < aLines.Length - 1; i++){
+            tempvert[i * 4 + 0] = aLines[0].verticeOne;
+			tempvert[i * 4 + 1] = aLines[0].verticeTwo; 
+            tempvert[i * 4 + 2] = aLines[0].verticeThree;
+			tempvert[i * 4 + 3] = aLines[0].verticeFour;
+        }
+*/
 
             //straight copy over first points
             vertices[0] = tempvert[0];
@@ -310,9 +324,43 @@ public class MapCreate2 : MonoBehaviour
 
             mesh.vertices = vertices;
             mesh.triangles = triangles;
-
-
-
     }
+
+    public class AugLine{
+        public Vector3 verticeOne;
+        public Vector3 verticeTwo;
+        public Vector3 verticeThree;
+        public Vector3 verticeFour;
+        public Vector3 pointOne;
+        public Vector3 pointTwo;
+        public Vector3 normPerp;
+
+        public AugLine (Vector3 point1, Vector3 point2){
+            pointOne = point1;
+            pointTwo = point2;
+            Vector3 p1p2 = point2 - point1;
+            normPerp = new Vector3(-p1p2.z, p1p2.y, p1p2.x);
+            normPerp = normPerp.normalized;
+            verticeOne = pointOne + normPerp * width;
+            verticeTwo = pointOne - normPerp * width;
+            verticeThree = pointTwo + normPerp * width;
+            verticeFour = pointTwo - normPerp * width;
+        }
+    }
+    /*
+    //PASS augLine.normPerp to this method to get the 
+    //quaternion for the rotation
+    private Quaternion vectorToQuaternion (Vector3 v){
+        Vector3 s;
+        Vector3 d;
+        Vector3 u;
+        Vector3 matrix;
+        s = Vector3.Cross(Vector3.up, v);
+        d = v;
+        u = Vector3.Cross(d, s);
+        matrix = new Vector3(d, u, s);
+        Quaternion q = Quaternion.Eular(matrix);
+    }
+    */
 }
 

@@ -63,6 +63,7 @@ public class MapCreate : MonoBehaviour {
 
     private void GenerateLevel(){
         SetConstants();
+
 		MakeTrack();
 		//MakeFloor ();
 	}
