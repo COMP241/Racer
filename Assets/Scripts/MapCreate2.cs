@@ -130,13 +130,13 @@ public class MapCreate2 : MonoBehaviour
         CreatePortal();
         CreateCheckPoints();
         playContainer.gameObject.SetActive(true);
+        MainOverlay.SetActive();
         idcanvas.SetActive(false);
 
     }
 
 
     private void ScaleMap(GameObject go, float f){
-
         go.transform.localScale += new Vector3(f, 0, f);
     }
 

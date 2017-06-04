@@ -11,6 +11,8 @@ public class gameController : MonoBehaviour {
     private GameObject player;
     private static Vector3 spawnPoint;
     private static Quaternion rotation;
+    private static float time = 0f;
+    private static bool activeTimer = false;
 
 	// Use this for initialization
 	void Start () {
@@ -19,10 +21,14 @@ public class gameController : MonoBehaviour {
 		else
 			Destroy(gameObject);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (activeTimer) {
+            time += Time.deltaTime;
+            MainOverlay.SetTime(time);
+    }
 	}
 
     public static void SetSpawnPoint(Vector3 p){
@@ -36,6 +42,12 @@ public class gameController : MonoBehaviour {
     public static void Respawn(){
         instance.player.transform.position = spawnPoint;
         instance.player.transform.rotation = rotation;
+        activeTimer = true;
+    }
+
+    public static void Lap(){
+        activeTimer = false;
+
     }
 
 

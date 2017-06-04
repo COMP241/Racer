@@ -6,7 +6,8 @@ public class portalTrigger : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        gameController.Respawn();
+        //gameController.Respawn();
+        gameController.Lap();
     }
 
 }
