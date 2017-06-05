@@ -12,15 +12,16 @@ public class MapCreate2 : MonoBehaviour
 
     private ImageMap map;
     private bool loading;
-    AugLine[] aLines; 
+    private static AugLine[] aLines;
+    private static CheckPoint[] cPointArray;
 
 
     // Generated Fields
-    private float horizontalScale;
-    private float verticalScale;
+    private static float horizontalScale;
+    private static float verticalScale;
     //private Vector3 adjust;
     private static float width;
-    private Line trackLine;
+    private static Line trackLine;
 
 
 
@@ -29,9 +30,9 @@ public class MapCreate2 : MonoBehaviour
 
     // Editor Fields
     [Header("Function")]
-    [SerializeField]private Transform levelContainer;
+    [SerializeField]private static Transform levelContainer;
     [SerializeField]private GameObject playContainer;
-    [SerializeField] private float allScale = 40f;
+    [SerializeField] private static float allScale = 40f;
     [SerializeField]
     private float setwidth = 1;
     [SerializeField]
@@ -160,6 +161,11 @@ public class MapCreate2 : MonoBehaviour
         Material grass = (Material)Resources.Load(("Grass"));
         rn.material = grass;
         Rigidbody rbd = floor.GetComponent<Rigidbody>();
+        MeshCollider mc = floor.GetComponent<MeshCollider>();
+        PhysicMaterial physMat = new PhysicMaterial();
+        physMat.dynamicFriction = 0f;
+        physMat.staticFriction = 0f;
+        mc.material = physMat;
 		ScaleMap(floor, 10);
  
 
@@ -175,26 +181,69 @@ public class MapCreate2 : MonoBehaviour
 
     private void CreatePortal(){
         GameObject portal = (GameObject)Resources.Load("Models/Portal");
-        Vector3 position = PointToWorldSpace(trackLine.Points[trackLine.Points.Length-1]);//vertices[vertices.Length - 1] + vertices[vertices.Length - 2]/2;
-        portal = Instantiate(portal, position, Quaternion.FromToRotation(Vector3.up, aLines[aLines.Length-1].normPerp)); //NEED TO GET D VEC FROM 2 VERT//+= new Vector3(4f, 0, 4f), Quaternion.Euler(90, 90, 90));
+        Vector3 position = PointToWorldSpace(trackLine.Points[trackLine.Points.Length-1]);
+        portal = Instantiate(portal, position, Quaternion.FromToRotation(Vector3.up, aLines[aLines.Length-1].normPerp)); 
         portal.transform.parent = levelContainer;
 
 
     }
 
-    private void CreateCheckPoints(){
-        for (int i = 2; i < aLines.Length - 2; i+=aLines.Length/6)
-        {
-            GameObject cp = (GameObject)Resources.Load(("Models/CheckPoint"));
-            Vector3 position = PointToWorldSpace(trackLine.Points[i]);
-            cp = Instantiate(cp, position, Quaternion.FromToRotation(Vector3.up, aLines[2].normPerp));
-            cp.transform.parent = levelContainer;
+    private void CreateCheckPoints()
+    {
+        if (aLines.Length < 12) {
+			cPointArray = new CheckPoint[1];
+			for (int i = 0; i < 1; i++)
+			{
+				/*
+                GameObject cp = (GameObject)Resources.Load(("Models/CheckPoint"));
+                Vector3 position = PointToWorldSpace(trackLine.Points[i]);
+                cp = Instantiate(cp, position, Quaternion.FromToRotation(Vector3.up, aLines[i].normPerp));
+                cp.transform.parent = levelContainer;
+                */
+				CheckPoint cP = new CheckPoint(trackLine, aLines.Length / 2 + 1);
+				cPointArray[i] = cP;
+			}
+
         }
+        else
+        {
+            //int scale = aLines.Length / 5;
+            cPointArray = new CheckPoint[5];
+            for (int i = 0; i < 5; i++)
+            {
+                /*
+                GameObject cp = (GameObject)Resources.Load(("Models/CheckPoint"));
+                Vector3 position = PointToWorldSpace(trackLine.Points[i]);
+                cp = Instantiate(cp, position, Quaternion.FromToRotation(Vector3.up, aLines[i].normPerp));
+                cp.transform.parent = levelContainer;
+                */
+                CheckPoint cP = new CheckPoint(trackLine, aLines.Length / 5 * i + 2);
+                cPointArray[i] = cP;
+            }
+        }
+        /*
+        else
+        {
+            int scale = aLines.Length / 1;
+            cPointArray = new CheckPoint[3];
+            for (int i = 0; i < 3; i++)
+            {
+                /*
+                GameObject cp = (GameObject)Resources.Load(("Models/CheckPoint"));
+                Vector3 position = PointToWorldSpace(trackLine.Points[i]);
+                cp = Instantiate(cp, position, Quaternion.FromToRotation(Vector3.up, aLines[i].normPerp));
+                cp.transform.parent = levelContainer;
+
+                CheckPoint cP = new CheckPoint(trackLine, i * scale + 2);
+                cPointArray[i] = cP;
+            }
+        }
+        */
     }
 
-    private Vector3 PointToWorldSpace(Point p)
+    private static Vector3 PointToWorldSpace(Point p)
     {
-        return new Vector3(p.X * horizontalScale * allScale, 0f, -p.Y * verticalScale * allScale);// + adjust;
+        return new Vector3(p.X * horizontalScale * allScale, 0f, -p.Y * verticalScale * allScale);
     }
 
     private void MakeTrack()
@@ -206,12 +255,10 @@ public class MapCreate2 : MonoBehaviour
 		MeshRenderer mr = track.AddComponent<MeshRenderer>();
 		Material mat = (Material)Resources.Load("asphalt");
 		mr.material = mat;
-        //Rigidbody trackBody = track.AddComponent<Rigidbody>();
         MeshCollider mc = track.AddComponent<MeshCollider>();
         PhysicMaterial pMat = new PhysicMaterial();
-        pMat.dynamicFriction = 0.6f;
-        //PhysicMaterial physMat = track.AddComponent<PhysicMaterial>();
-        //col.material = pMat;
+        pMat.dynamicFriction = 1.0f;
+        pMat.staticFriction = 1.0f;
         mc.material = pMat;
 
 		track.transform.parent = levelContainer;
@@ -344,6 +391,27 @@ public class MapCreate2 : MonoBehaviour
             mesh.vertices = vertices;
             mesh.triangles = triangles;
     }
+
+    public class CheckPoint{
+        GameObject model;
+        Vector3 position;
+        Boolean tagged;
+
+
+        public CheckPoint(Line line, int index){
+			GameObject cp = (GameObject)Resources.Load(("Models/CheckPoint"));
+			Vector3 position = PointToWorldSpace(line.Points[index]);
+            tagged = false;
+			cp = Instantiate(cp, position, Quaternion.FromToRotation(Vector3.up, aLines[index].normPerp));
+			cp.transform.parent = levelContainer;
+
+		}
+
+        public void SetTagged(){
+            tagged = true;
+        }
+    }
+
 
     public class AugLine{
         public Vector3 verticeOne;
