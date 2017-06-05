@@ -26,7 +26,7 @@ public class gameController : MonoBehaviour {
     void Update()
     {
         if (activeTimer) {
-            time += Time.deltaTime;
+            time = Time.deltaTime;
             MainOverlay.SetTime(time);
     }
 	}
@@ -47,6 +47,10 @@ public class gameController : MonoBehaviour {
 
     public static void Lap(){
         activeTimer = false;
+        MapCreate2.SetInactive();
+        MainOverlay.SetInactive();
+        FinishRace.SetActive();
+		FinishRace.SetFinishTime(time);
 
     }
 

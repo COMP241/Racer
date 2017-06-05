@@ -8,7 +8,7 @@ using UnityEngine.Rendering;
 
 public class MapCreate2 : MonoBehaviour
 {
-
+    private static MapCreate2 instance;
 
     private ImageMap map;
     private bool loading;
@@ -18,7 +18,7 @@ public class MapCreate2 : MonoBehaviour
     // Generated Fields
     private float horizontalScale;
     private float verticalScale;
-    private Vector3 adjust;
+    //private Vector3 adjust;
     private static float width;
     private Line trackLine;
 
@@ -29,8 +29,8 @@ public class MapCreate2 : MonoBehaviour
 
     // Editor Fields
     [Header("Function")]
-    [SerializeField]
-    private Transform playContainer;
+    [SerializeField]private Transform levelContainer;
+    [SerializeField]private GameObject playContainer;
     [SerializeField] private float allScale = 40f;
     [SerializeField]
     private float setwidth = 1;
@@ -43,6 +43,13 @@ public class MapCreate2 : MonoBehaviour
     [Header("Aesthetic")]
     [SerializeField]
     private Material lineMaterial;
+
+    private void Start()
+    {
+        if (instance == null) instance = GetComponent<MapCreate2>();
+        else Destroy(gameObject);
+        SetInactive();
+    }
 
     public void Load(string id)
     {
@@ -133,6 +140,7 @@ public class MapCreate2 : MonoBehaviour
         MainOverlay.SetActive();
         idcanvas.SetActive(false);
 
+
     }
 
 
@@ -145,7 +153,7 @@ public class MapCreate2 : MonoBehaviour
     private void MakeFloor()
     {
         GameObject floor = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        floor.transform.parent = playContainer;
+        floor.transform.parent = levelContainer;
         floor.transform.position = Vector3.zero;
         floor.transform.localScale = new Vector3(horizontalScale * allScale / 10f, 1, verticalScale * allScale / 10f);
         Renderer rn = floor.GetComponent<Renderer>();
@@ -153,7 +161,7 @@ public class MapCreate2 : MonoBehaviour
         rn.material = grass;
         Rigidbody rbd = floor.GetComponent<Rigidbody>();
 		ScaleMap(floor, 10);
-        floor.transform.parent = playContainer;
+ 
 
     }
 
@@ -169,7 +177,7 @@ public class MapCreate2 : MonoBehaviour
         GameObject portal = (GameObject)Resources.Load("Models/Portal");
         Vector3 position = PointToWorldSpace(trackLine.Points[trackLine.Points.Length-1]);//vertices[vertices.Length - 1] + vertices[vertices.Length - 2]/2;
         portal = Instantiate(portal, position, Quaternion.FromToRotation(Vector3.up, aLines[aLines.Length-1].normPerp)); //NEED TO GET D VEC FROM 2 VERT//+= new Vector3(4f, 0, 4f), Quaternion.Euler(90, 90, 90));
-        portal.transform.parent = playContainer;
+        portal.transform.parent = levelContainer;
 
 
     }
@@ -180,7 +188,7 @@ public class MapCreate2 : MonoBehaviour
             GameObject cp = (GameObject)Resources.Load(("Models/CheckPoint"));
             Vector3 position = PointToWorldSpace(trackLine.Points[i]);
             cp = Instantiate(cp, position, Quaternion.FromToRotation(Vector3.up, aLines[2].normPerp));
-            cp.transform.parent = playContainer;
+            cp.transform.parent = levelContainer;
         }
     }
 
@@ -199,7 +207,7 @@ public class MapCreate2 : MonoBehaviour
 		Material mat = (Material)Resources.Load("asphalt");
 		mr.material = mat;
 
-		track.transform.parent = playContainer;
+		track.transform.parent = levelContainer;
 		track.transform.position = track.transform.position + Vector3.up * 0.001f;
 
 		Vector3[] tempvert = new Vector3[(trackLine.Points.Length * 4) - 4];
@@ -366,5 +374,14 @@ public class MapCreate2 : MonoBehaviour
         Quaternion q = Quaternion.Eular(matrix);
     }
     */
+
+
+    public static void SetInactive(){
+        instance.playContainer.SetActive(false);
+    }
+    public static void SetActive(){
+        instance.playContainer.SetActive(true);
+        
+    }
 }
 
