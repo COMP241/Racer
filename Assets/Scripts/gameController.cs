@@ -26,7 +26,7 @@ public class gameController : MonoBehaviour {
     void Update()
     {
         if (activeTimer) {
-            time = Time.deltaTime;
+            time += Time.deltaTime;
             MainOverlay.SetTime(time);
     }
 	}

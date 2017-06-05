@@ -206,6 +206,13 @@ public class MapCreate2 : MonoBehaviour
 		MeshRenderer mr = track.AddComponent<MeshRenderer>();
 		Material mat = (Material)Resources.Load("asphalt");
 		mr.material = mat;
+        //Rigidbody trackBody = track.AddComponent<Rigidbody>();
+        MeshCollider mc = track.AddComponent<MeshCollider>();
+        PhysicMaterial pMat = new PhysicMaterial();
+        pMat.dynamicFriction = 0.6f;
+        //PhysicMaterial physMat = track.AddComponent<PhysicMaterial>();
+        //col.material = pMat;
+        mc.material = pMat;
 
 		track.transform.parent = levelContainer;
 		track.transform.position = track.transform.position + Vector3.up * 0.001f;
