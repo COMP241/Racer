@@ -6,13 +6,15 @@ public class gameController : MonoBehaviour {
 
     private static gameController instance;
 
+    //[SerializeField]
+    //private GameObject player;
+    [SerializeField]private Player player;
 
-    [SerializeField]
-    private GameObject player;
     private static Vector3 spawnPoint;
     private static Quaternion rotation;
     private static float time = 0f;
     private static bool activeTimer = false;
+
 
 	// Use this for initialization
 	void Start () {
@@ -42,6 +44,9 @@ public class gameController : MonoBehaviour {
     public static void Respawn(){
         instance.player.transform.position = spawnPoint;
         instance.player.transform.rotation = rotation;
+        time = 0f;
+        instance.player.ResetVelocity();
+        MapCreate2.setCheckpoints();
         activeTimer = true;
     }
 
@@ -51,7 +56,6 @@ public class gameController : MonoBehaviour {
         MainOverlay.SetInactive();
         FinishRace.SetActive();
 		FinishRace.SetFinishTime(time);
-
     }
 
 

@@ -15,6 +15,8 @@ public class MapCreate2 : MonoBehaviour
     private static AugLine[] aLines;
     private static CheckPoint[] cPointArray;
 
+    public static int checkpointCount;
+
 
     // Generated Fields
     private static float horizontalScale;
@@ -111,6 +113,12 @@ public class MapCreate2 : MonoBehaviour
 
     }
 
+    public static void setCheckpoints(){
+        checkpointCount = cPointArray.Length;
+        checkpointCount *= 3;
+    }
+
+
     private void SetAugLines(){
 		//Set up augLines
 		aLines = new AugLine[trackLine.Points.Length - 1];
@@ -134,12 +142,13 @@ public class MapCreate2 : MonoBehaviour
         SetAugLines();
 		MakeFloor();
         MakeTrack();
-        Spawn();
         CreatePortal();
         CreateCheckPoints();
+        Spawn();
         playContainer.gameObject.SetActive(true);
         MainOverlay.SetActive();
         idcanvas.SetActive(false);
+
 
 
     }
@@ -200,7 +209,8 @@ public class MapCreate2 : MonoBehaviour
                 cp = Instantiate(cp, position, Quaternion.FromToRotation(Vector3.up, aLines[i].normPerp));
                 cp.transform.parent = levelContainer;
                 */
-				CheckPoint cP = new CheckPoint(trackLine, aLines.Length / 2 + 1);
+				CheckPoint cP = new CheckPoint(trackLine, aLines.Length / 2 * i + 1);
+
 				cPointArray[i] = cP;
 			}
 
@@ -400,9 +410,10 @@ public class MapCreate2 : MonoBehaviour
 
         public CheckPoint(Line line, int index){
 			GameObject cp = (GameObject)Resources.Load(("Models/CheckPoint"));
-			Vector3 position = PointToWorldSpace(line.Points[index]);
-            tagged = false;
-			cp = Instantiate(cp, position, Quaternion.FromToRotation(Vector3.up, aLines[index].normPerp));
+			Vector3 pos = PointToWorldSpace(line.Points[index]);
+            cp.tag = index.ToString();
+			tagged = false;
+			cp = Instantiate(cp, pos, Quaternion.FromToRotation(Vector3.up, aLines[index].normPerp));
 			cp.transform.parent = levelContainer;
 
 		}

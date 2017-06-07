@@ -7,7 +7,8 @@ public class portalTrigger : MonoBehaviour {
     private void OnTriggerEnter(Collider other)
     {
         //gameController.Respawn();
-        gameController.Lap();
+        if (MapCreate2.checkpointCount == 0) gameController.Lap();
+        else gameController.Respawn();
     }
 
 }
