@@ -45,6 +45,7 @@ public class gameController : MonoBehaviour {
     public static void Respawn(){
         instance.player.transform.position = spawnPoint;
         instance.player.transform.rotation = rotation;
+        MapCreate2.SetCheckpoints();
         time = 0f;
         instance.player.ResetVelocity();
 
