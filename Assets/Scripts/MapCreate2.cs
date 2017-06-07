@@ -32,15 +32,19 @@ public class MapCreate2 : MonoBehaviour
 
     // Editor Fields
     [Header("Function")]
-    [SerializeField]private static Transform levelContainer;
-    [SerializeField]private GameObject playContainer;
-    [SerializeField] private static float allScale = 40f;
+
+    [SerializeField]
+    private GameObject playContainer;
+    [SerializeField] 
+    private static float allScale = 40f;
     [SerializeField]
     private float setwidth = 1;
     [SerializeField]
     private GameObject carObject;
     [SerializeField]
     private GameObject idcanvas;
+    [SerializeField]
+    private static Transform levelContainer;
 
 
     [Header("Aesthetic")]
@@ -113,7 +117,7 @@ public class MapCreate2 : MonoBehaviour
 
     }
 
-    public static void setCheckpoints(){
+    public static void SetCheckpoints(){
         checkpointCount = cPointArray.Length;
         checkpointCount *= 3;
     }
@@ -144,10 +148,13 @@ public class MapCreate2 : MonoBehaviour
         MakeTrack();
         CreatePortal();
         CreateCheckPoints();
-        Spawn();
+        SetCheckpoints();
+		Spawn();
         playContainer.gameObject.SetActive(true);
         MainOverlay.SetActive();
         idcanvas.SetActive(false);
+		CountdownCanvasScript.SetActive();
+       
 
 
 
@@ -405,22 +412,14 @@ public class MapCreate2 : MonoBehaviour
     public class CheckPoint{
         GameObject model;
         Vector3 position;
-        Boolean tagged;
-
 
         public CheckPoint(Line line, int index){
 			GameObject cp = (GameObject)Resources.Load(("Models/CheckPoint"));
 			Vector3 pos = PointToWorldSpace(line.Points[index]);
-            cp.tag = index.ToString();
-			tagged = false;
 			cp = Instantiate(cp, pos, Quaternion.FromToRotation(Vector3.up, aLines[index].normPerp));
 			cp.transform.parent = levelContainer;
-
 		}
 
-        public void SetTagged(){
-            tagged = true;
-        }
     }
 
 

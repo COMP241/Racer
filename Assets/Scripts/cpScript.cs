@@ -4,14 +4,9 @@ using UnityEngine;
 
 public class cpScript : MonoBehaviour
 {
-
-	bool cpTagged = false;
-
-
 	private void OnTriggerEnter(Collider other)
 	{
-       
-        Debug.Log(MapCreate2.checkpointCount.ToString());
+        //Debug.Log(MapCreate2.checkpointCount.ToString());
         MapCreate2.checkpointCount = MapCreate2.checkpointCount - 1;
 	}
 }

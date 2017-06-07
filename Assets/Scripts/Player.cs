@@ -13,19 +13,6 @@ public class Player : MonoBehaviour
 		rb = GetComponent<Rigidbody>();
 	}
 
-    /*
-	private void Update()
-	{
-		if (transform.position.y < resetY)
-			GameController.Respawn();
-	}
-
-	private void OnTriggerEnter(Collider other)
-	{
-		if (other.tag == "Goal")
-			GameController.Win();
-	}
-    */
 	public void ResetVelocity()
 	{
 		if (rb == null)

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class gameController : MonoBehaviour {
 
@@ -14,7 +15,7 @@ public class gameController : MonoBehaviour {
     private static Quaternion rotation;
     private static float time = 0f;
     private static bool activeTimer = false;
-
+    public bool countedDown = false;
 
 	// Use this for initialization
 	void Start () {
@@ -46,8 +47,8 @@ public class gameController : MonoBehaviour {
         instance.player.transform.rotation = rotation;
         time = 0f;
         instance.player.ResetVelocity();
-        MapCreate2.setCheckpoints();
         activeTimer = true;
+      
     }
 
     public static void Lap(){
@@ -56,6 +57,12 @@ public class gameController : MonoBehaviour {
         MainOverlay.SetInactive();
         FinishRace.SetActive();
 		FinishRace.SetFinishTime(time);
+
+    }
+
+
+    public static void EnableCountedDown(){
+        instance.countedDown = true;
     }
 
 
