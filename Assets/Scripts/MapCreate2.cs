@@ -153,7 +153,7 @@ public class MapCreate2 : MonoBehaviour
         playContainer.gameObject.SetActive(true);
         MainOverlay.SetActive();
         idcanvas.SetActive(false);
-		CountdownCanvasScript.SetActive();
+        CountdownCanvasScript.SetActive();
        
 
 
@@ -190,7 +190,7 @@ public class MapCreate2 : MonoBehaviour
     private void Spawn()
     {
        
-        Vector3 startPos = PointToWorldSpace(trackLine.Points[0]);
+        //Vector3 startPos = PointToWorldSpace(trackLine.Points[0]);
         gameController.Respawn();
     }
 
@@ -216,7 +216,7 @@ public class MapCreate2 : MonoBehaviour
                 cp = Instantiate(cp, position, Quaternion.FromToRotation(Vector3.up, aLines[i].normPerp));
                 cp.transform.parent = levelContainer;
                 */
-				CheckPoint cP = new CheckPoint(trackLine, aLines.Length / 2 * i + 1);
+				CheckPoint cP = new CheckPoint(trackLine, aLines.Length / 2 * i + 1, i);
 
 				cPointArray[i] = cP;
 			}
@@ -234,7 +234,7 @@ public class MapCreate2 : MonoBehaviour
                 cp = Instantiate(cp, position, Quaternion.FromToRotation(Vector3.up, aLines[i].normPerp));
                 cp.transform.parent = levelContainer;
                 */
-                CheckPoint cP = new CheckPoint(trackLine, aLines.Length / 5 * i + 2);
+                CheckPoint cP = new CheckPoint(trackLine, aLines.Length / 5 * i + 2, i);
                 cPointArray[i] = cP;
             }
         }
@@ -412,11 +412,14 @@ public class MapCreate2 : MonoBehaviour
     public class CheckPoint{
         GameObject model;
         Vector3 position;
+        int objectName;
 
-        public CheckPoint(Line line, int index){
+        public CheckPoint(Line line, int index, int i){
+            objectName = i;
 			GameObject cp = (GameObject)Resources.Load(("Models/CheckPoint"));
 			Vector3 pos = PointToWorldSpace(line.Points[index]);
 			cp = Instantiate(cp, pos, Quaternion.FromToRotation(Vector3.up, aLines[index].normPerp));
+            cp.name = "CheckPoint" + i;
 			cp.transform.parent = levelContainer;
 		}
 

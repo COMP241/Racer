@@ -14,8 +14,8 @@ public class gameController : MonoBehaviour {
     private static Vector3 spawnPoint;
     private static Quaternion rotation;
     private static float time = 0f;
-    private static bool activeTimer = false;
-    public bool countedDown = false;
+    public static bool activeTimer = false;
+    public static bool countedDown = false;
 
 	// Use this for initialization
 	void Start () {
@@ -47,7 +47,7 @@ public class gameController : MonoBehaviour {
         instance.player.transform.rotation = rotation;
         time = 0f;
         instance.player.ResetVelocity();
-        activeTimer = true;
+
       
     }
 
@@ -62,7 +62,8 @@ public class gameController : MonoBehaviour {
 
 
     public static void EnableCountedDown(){
-        instance.countedDown = true;
+        countedDown = true;
+        activeTimer = true;
     }
 
 

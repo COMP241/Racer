@@ -24,6 +24,7 @@ public class CountdownCanvasScript : MonoBehaviour
 	public static void SetActive()
 	{
 		instance.gameObject.SetActive(true);
+
 	}
 
 	public static void SetCountedDown()

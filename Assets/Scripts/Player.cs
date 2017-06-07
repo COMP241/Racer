@@ -21,4 +21,11 @@ public class Player : MonoBehaviour
 		rb.velocity = Vector3.zero;
 		rb.angularVelocity = Vector3.zero;
 	}
+
+    public void SetInactive(){
+        this.SetActive();
+    }
+    public void SetActive(){
+        this.SetInactive();
+    }
 }
