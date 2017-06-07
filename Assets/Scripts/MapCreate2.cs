@@ -416,11 +416,14 @@ public class MapCreate2 : MonoBehaviour
 
         public CheckPoint(Line line, int index, int i){
             objectName = i;
-			GameObject cp = (GameObject)Resources.Load(("Models/CheckPoint"));
-			Vector3 pos = PointToWorldSpace(line.Points[index]);
-			cp = Instantiate(cp, pos, Quaternion.FromToRotation(Vector3.up, aLines[index].normPerp));
+			GameObject cp = (GameObject)Resources.Load(("Models/CheckpointLine"));
+            Vector3 pos = aLines[index].pointOne + new Vector3(0f, 0.002f, 0f);//PointToWorldSpace(line.Points[index]);
+            Quaternion rotation = Quaternion.FromToRotation(Vector3.forward, aLines[index].normPerp);
+            rotation *= Quaternion.Euler(0, 90, 0);
+			cp = Instantiate(cp, pos, rotation);
             cp.name = "CheckPoint" + i;
 			cp.transform.parent = levelContainer;
+
 		}
 
     }
