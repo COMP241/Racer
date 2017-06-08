@@ -8,7 +8,7 @@ public class portalTrigger : MonoBehaviour {
     {
         //gameController.Respawn();
         if (MapCreate2.checkpointCount == 0) gameController.Lap();
-        else gameController.Respawn();
+        else gameController.Complete(); // Could add new canvas and failure indication
     }
 
 }
