@@ -8,16 +8,14 @@ public class SubmitScore : MonoBehaviour {
 
 	private string name = null;
 	[SerializeField] private Text text;
-	private string game = "tilt";
+	private string game = "race";
 
 	public void SetName(string name)
 	{
-		Debug.Log("setName");
 		this.name = name;
 	}
 	public void submitScore()
 	{
-		Debug.Log("submitScore");
 		if (!string.IsNullOrEmpty(name))
 		{
 			text.text = "Submitted";
@@ -26,22 +24,16 @@ public class SubmitScore : MonoBehaviour {
 	}
 	private IEnumerator SendPost()
 	{
-
-		Debug.Log("sendpost");
-		Debug.Log (game);
-		Debug.Log (name);
-		Debug.Log (MapCreate2.mapid.ToString ());
-		Debug.Log (FinishRace.mapTime.ToString("##.00"));
 		using (UnityWebRequest www = UnityWebRequest.Post("http://103.208.86.184/a.php", new Dictionary<string, string>
 			{
 				{  "game", game },
 				{  "user", name },
-				{  "score", MapCreate2.mapid.ToString("##.00") },
-				{  "mapid", FinishRace.mapTime.ToString() }
+				{  "score", FinishRace.mapTime.ToString()},
+				{  "mapid", MapCreate2.mapid.ToString()}
+
 			} ))
 		{
 			yield return www.Send();
-			Debug.Log (www.responseCode);
 		}
 	}
 }
