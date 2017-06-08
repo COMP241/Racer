@@ -38,7 +38,8 @@ public class VehicleController : MonoBehaviour
 
 	public void FixedUpdate()
 	{
-		float motor = maxMotorTorque * Input.GetAxis("Vertical");
+        maxSteeringAngle = 4;
+        float motor = maxMotorTorque * Input.GetAxis("Vertical");
 		float steering = maxSteeringAngle * Input.GetAxis("Horizontal");
 
 		foreach (AxleInfo axleInfo in axleInfos)
