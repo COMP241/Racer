@@ -8,5 +8,12 @@ public class cpScript : MonoBehaviour
 	{
         Debug.Log(MapCreate2.checkpointCount.ToString());
         MapCreate2.checkpointCount = MapCreate2.checkpointCount - 1;
+        /*
+        if (other.tag == "Player")
+        {
+            AudioSource aud = GetComponent<AudioSource>();
+            aud.Play();
+        }
+        */
 	}
 }
