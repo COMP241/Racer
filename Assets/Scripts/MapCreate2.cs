@@ -409,9 +409,15 @@ public class MapCreate2 : MonoBehaviour
 
                 }
 
+        Vector2[] uvs = new Vector2[vertices.Length];
+        for (int i = 0; i < vertices.Length; i++){
+            uvs[i] = new Vector2(vertices[i].x, vertices[i].y);
+        }
 
-            mesh.vertices = vertices;
-            mesh.triangles = triangles;
+
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+        mesh.uv = uvs;
     }
 
     public class CheckPoint{
