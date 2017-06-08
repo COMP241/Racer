@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
 	private void Start()
 	{
 		rb = GetComponent<Rigidbody>();
+        rb.isKinematic = true;
 	}
 
 	public void ResetVelocity()
