@@ -196,9 +196,11 @@ public class MapCreate2 : MonoBehaviour
 
 
     private void CreatePortal(){
-        GameObject portal = (GameObject)Resources.Load("Models/Portal");
+        GameObject portal = (GameObject)Resources.Load("Models/FinishLine");
         Vector3 position = PointToWorldSpace(trackLine.Points[trackLine.Points.Length-1]);
-        portal = Instantiate(portal, position, Quaternion.FromToRotation(Vector3.up, aLines[aLines.Length-1].normPerp)); 
+        Quaternion rotation = Quaternion.FromToRotation(Vector3.up, aLines[aLines.Length - 1].normPerp);
+        //rotation *= Quaternion.Euler(0, 90, 0);
+        portal = Instantiate(portal, position, rotation); 
         portal.transform.parent = levelContainer;
 
 
