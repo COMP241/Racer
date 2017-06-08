@@ -58,12 +58,12 @@ public class MapCreate2 : MonoBehaviour
         SetInactive();
     }
 
-    public void Load(string id)
+    public static void Load(string id)
     {
-        if (loading) return;
+        if (instance.loading) return;
 
         try{
-            StartCoroutine(LoadLevel(int.Parse(id)));
+            instance.StartCoroutine(instance.LoadLevel(int.Parse(id)));
         }
         catch (FormatException)
         {
