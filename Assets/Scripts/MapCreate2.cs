@@ -136,8 +136,10 @@ public class MapCreate2 : MonoBehaviour
             aLines[i] = new AugLine(worldPoint[i], worldPoint[i + 1]);
         }
 
-        //TODO: could move, needs to be after SET CONSTANTS and BEFORE makeTRACK
-		gameController.SetRotation(Quaternion.FromToRotation(aLines[0].normPerp, Vector3.up));
+        //TODO: NEED TO FIX SPAWN
+        Quaternion rt = Quaternion.FromToRotation(Vector3.forward, aLines[0].normPerp);
+        rt = rt *= Quaternion.Euler(0, 90, 0);
+		gameController.SetRotation(rt);
     }
 
     private void GenerateLevel()
