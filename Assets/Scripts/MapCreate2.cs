@@ -16,7 +16,7 @@ public class MapCreate2 : MonoBehaviour
     private static CheckPoint[] cPointArray;
 
     public static int checkpointCount;
-
+	public static int mapid;
 
     // Generated Fields
     private static float horizontalScale;
@@ -94,6 +94,7 @@ public class MapCreate2 : MonoBehaviour
 
     private void SetConstants()
     {
+		mapid = map.Id;
         if (map.Ratio >= 1f)
         {
             horizontalScale = map.Ratio;

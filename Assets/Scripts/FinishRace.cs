@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class FinishRace : MonoBehaviour {
 
     private static FinishRace instance;
+	public static float mapTime;
 
     [SerializeField] private Text timeText;
 
@@ -17,6 +18,7 @@ public class FinishRace : MonoBehaviour {
 	}
 
     public static void SetFinishTime(float s){
+		mapTime = s;
 		instance.timeText.text = s.ToString("0.00");
 
 	}
