@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
 
 public class gameController : MonoBehaviour {
 
@@ -52,7 +54,14 @@ public class gameController : MonoBehaviour {
         rb = instance.player.GetComponent<Rigidbody>();
         rb.isKinematic = true;
 
+
       
+    }
+
+    public static void Complete(){
+        //Application.LoadLevel("Main");
+        SceneManager.LoadScene("Main");
+
     }
 
     public static void Lap(){
