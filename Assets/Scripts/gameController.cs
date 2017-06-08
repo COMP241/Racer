@@ -48,6 +48,9 @@ public class gameController : MonoBehaviour {
         MapCreate2.SetCheckpoints();
         time = 0f;
         instance.player.ResetVelocity();
+        Rigidbody rb;
+        rb = instance.player.GetComponent<Rigidbody>();
+        rb.isKinematic = true;
 
       
     }
