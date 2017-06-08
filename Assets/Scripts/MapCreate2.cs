@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -177,7 +177,7 @@ public class MapCreate2 : MonoBehaviour
         floor.transform.position = Vector3.zero;
         floor.transform.localScale = new Vector3(horizontalScale * allScale / 10f, 1, verticalScale * allScale / 10f);
         Renderer rn = floor.GetComponent<Renderer>();
-        Material grass = (Material)Resources.Load(("Materials/Grass"));
+        Material grass = (Material)Resources.Load(("Materials/SquareGrass"));
         rn.material = grass;
         Rigidbody rbd = floor.GetComponent<Rigidbody>();
         MeshCollider mc = floor.GetComponent<MeshCollider>();
@@ -275,7 +275,7 @@ public class MapCreate2 : MonoBehaviour
 		MeshFilter mf = track.AddComponent<MeshFilter>();
 		mf.sharedMesh = mesh;
 		MeshRenderer mr = track.AddComponent<MeshRenderer>();
-		Material mat = (Material)Resources.Load("Materials/road");
+		Material mat = (Material)Resources.Load("Materials/SquareRoad");
 		mr.material = mat;
         MeshCollider mc = track.AddComponent<MeshCollider>();
         PhysicMaterial pMat = new PhysicMaterial();
