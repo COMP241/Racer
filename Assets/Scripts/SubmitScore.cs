@@ -24,7 +24,7 @@ public class SubmitScore : MonoBehaviour {
 	}
 	private IEnumerator SendPost()
 	{
-		using (UnityWebRequest www = UnityWebRequest.Post("http://103.208.86.184/a.php", new Dictionary<string, string>
+		using (UnityWebRequest www = UnityWebRequest.Post("http://score.papertopixels.tk/a.php", new Dictionary<string, string>
 			{
 				{  "game", game },
 				{  "user", name },
